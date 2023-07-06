@@ -1,10 +1,11 @@
 package com.example.todolistjava.repository;
 
 import com.example.todolistjava.domain.Todo;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-
+@Repository
 public class MemoryTodoRepository implements TodoRepository{
 
     List<Todo> store = new ArrayList<>(){{

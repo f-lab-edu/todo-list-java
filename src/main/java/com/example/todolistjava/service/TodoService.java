@@ -1,14 +1,19 @@
 package com.example.todolistjava.service;
 
 import com.example.todolistjava.domain.Todo;
-import com.example.todolistjava.repository.MemoryTodoRepository;
 import com.example.todolistjava.repository.TodoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TodoService {
 
-    private final TodoRepository todoRepository = new MemoryTodoRepository();
+    private final TodoRepository todoRepository;
+
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
     /**
      * 추가
