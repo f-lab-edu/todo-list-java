@@ -25,8 +25,7 @@ public class TodoController {
 
     @PostMapping("/todos")
     public List<Todo> createOne(Todo todo) {
-        todoService.addTodo(todo);
-        List<Todo> list = todoService.findTodos();
+        List<Todo> list = todoService.addTodo(todo);
         return list;
     }
 }
