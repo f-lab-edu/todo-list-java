@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class TodoController {
     }
 
     @PostMapping("/todos")
-    public List<Todo> createOne(Todo todo) {
+    public List<Todo> createOne(Todo todo) throws SQLException {
         List<Todo> list = todoService.addTodo(todo);
         return list;
     }

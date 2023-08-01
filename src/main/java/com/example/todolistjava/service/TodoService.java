@@ -4,6 +4,7 @@ import com.example.todolistjava.domain.Todo;
 import com.example.todolistjava.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ public class TodoService {
     /**
      * 추가
      */
-    public List<Todo> addTodo(Todo todo) {
+    public List<Todo> addTodo(Todo todo) throws SQLException {
         todoRepository.save(todo);
         return todoRepository.findAll();
     }
