@@ -3,14 +3,22 @@ package com.example.todolistjava.repository;
 import com.example.todolistjava.connection.DBConnectionUtil;
 import com.example.todolistjava.domain.Todo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
 @Repository
 @Slf4j
 public class TodoRepository {
+
+    private final DataSource dataSource;
+
+    public TodoRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public void save(Todo todo) throws SQLException {
         String sql = "insert into todo_table(id, text, isCompleted, isEdit) values (?, ?, ?, ?)";
@@ -36,33 +44,14 @@ public class TodoRepository {
     }
 
     private void close(Connection con, Statement stmt, ResultSet rs) {
-        if(rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                log.info("error", e);
-            }
-        }
-
-        if(stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                log.info("error", e);
-            }
-        }
-
-        if(con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                log.info("error", e);
-            }
-        }
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(con);
     }
 
-    private Connection getConnection() {
-        return DBConnectionUtil.getConnection();
+    private Connection getConnection() throws SQLException {
+        Connection con = dataSource.getConnection();
+        return con;
     }
 
     public List<Todo> findAll() {
