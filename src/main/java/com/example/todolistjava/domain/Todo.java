@@ -10,6 +10,9 @@ public class Todo {
     private boolean isCompleted;
     private boolean isEdit;
 
+    public Todo() {
+    }
+
     public Todo(String id, String text, boolean isCompleted, boolean isEdit) {
         this.id = id;
         this.text = text;
