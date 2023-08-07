@@ -5,7 +5,6 @@ import com.example.todolistjava.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @Service
 public class TodoService {
@@ -19,16 +18,20 @@ public class TodoService {
     /**
      * 추가
      */
-    public List<Todo> addTodo(Todo todo) throws SQLException {
-        todoRepository.save(todo);
-        return todoRepository.findAll();
+    public Todo addTodo(Todo todo) throws SQLException {
+        return todoRepository.save(todo);
     }
 
-    /**
-     * 전체 회원 조회
-     */
-
-    public List<Todo> findTodos() {
-        return todoRepository.findAll();
+    public Todo findTodo(String id) throws SQLException {
+        return todoRepository.findById(id);
     }
+
+    public void editTodo(String id, String text) throws SQLException {
+        todoRepository.update(id, text);
+    }
+
+    public void deleteTodo(String id) throws SQLException {
+        todoRepository.delete(id);
+    }
+
 }
