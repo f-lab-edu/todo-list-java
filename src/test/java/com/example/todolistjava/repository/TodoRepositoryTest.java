@@ -5,9 +5,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 
 import static com.example.todolistjava.connection.ConnectionConst.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,6 +48,6 @@ public class TodoRepositoryTest {
         //delete
         repository.delete(todo.getId());
         assertThatThrownBy(() -> repository.findById(todo.getId()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }
