@@ -1,44 +1,57 @@
 package com.example.todolistjava.repository;
 
 import com.example.todolistjava.domain.Todo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.SQLException;
 
 @Repository
-@Slf4j
 public class TodoRepository {
 
-    private final JdbcTemplate template;
+    private final NamedParameterJdbcTemplate template;
+    private static final String saveSql = "insert into todo_table(id, text, isCompleted, isEdit) values (:id, :text, :isCompleted, :isEdit)";
+    private static final String findSql = "select * from todo_table where id=:id";
+    private static final String updateSql = "update todo_table set text=:text where id=:id";
+    private static final String deleteSql = "delete from todo_table where id=:id";
 
     public TodoRepository(DataSource dataSource) {
-        template = new JdbcTemplate(dataSource);
+        template = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public Todo save(Todo todo) throws SQLException {
-        String sql = "insert into todo_table(id, text, isCompleted, isEdit) values (?, ?, ?, ?)";
-        template.update(sql, todo.getId(), todo.getText(), todo.isCompleted(), todo.isEdit());
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", todo.getId())
+                .addValue("text", todo.getText())
+                .addValue("isCompleted", todo.isCompleted())
+                .addValue("isEdit", todo.isEdit());
+
+        template.update(saveSql, param);
         return todo;
     }
 
     public Todo findById(String id) throws SQLException {
-        String sql = "select * from todo_table where id = ?";
-        return template.queryForObject(sql, todoRowMapper(), id);
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
+        return template.queryForObject(findSql, param, todoRowMapper());
 
     }
 
     public void update(String id, String text) throws SQLException {
-        String sql = "update todo_table set text=? where id=?";
-        template.update(sql, text, id);
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("text", text)
+                .addValue("id", id);
+        template.update(updateSql, param);
     }
 
     public void delete(String id) throws SQLException {
-        String sql = "delete from todo_table where id=?";
-        template.update(sql, id);
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
+        template.update(deleteSql, param);
     }
 
     private RowMapper<Todo> todoRowMapper() {
